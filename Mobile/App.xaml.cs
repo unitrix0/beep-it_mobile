@@ -13,7 +13,6 @@ namespace Mobile
         {
             InitializeComponent();
 
-
             DependencyService.Register<MockDataStore>();
             MainPage = new AppShell();
         }
@@ -28,14 +27,6 @@ namespace Mobile
 
         protected override void OnResume()
         {
-        }
-
-        private void InitializeIcons()
-        {
-            Plugin.Iconize.Iconize
-                .With(new Plugin.Iconize.Fonts.FontAwesomeRegularModule())
-                .With(new Plugin.Iconize.Fonts.FontAwesomeBrandsModule())
-                .With(new Plugin.Iconize.Fonts.FontAwesomeSolidModule());            
         }
     }
 }
