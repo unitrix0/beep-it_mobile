@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Mobile.ViewModels;assembly=Mobile"
+             xmlns:fontAwesome="clr-namespace:FontAwesome;assembly=Mobile"
+             mc:Ignorable="d"
+             x:Class="Mobile.Views.ScanPage">
+    <ContentPage.BindingContext>
+        <viewModels:ScanPageViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+       <Grid>
+           <Grid.RowDefinitions>
+               <RowDefinition Height="Auto"/>
+               <RowDefinition Height="*"/>
+           </Grid.RowDefinitions>
+           <BoxView Grid.Row="0" Color="#f6f6f6"/>
+           <Label Grid.Row="0" Text="Scan" FontSize="Title" FontAttributes="Bold" Margin="10,5"/>
+           <BoxView Grid.Row="0" Color="#b2b2b2" HeightRequest="1" VerticalOptions="End"/>
+           
+           <!--Row 1-->
+           <Grid Grid.Row="1">
+               <Grid.RowDefinitions>
+                   <RowDefinition Height="*"/>
+                   <RowDefinition Height="Auto"/>
+               </Grid.RowDefinitions>
+               <!--<BoxView Grid.Row="0" Color="#b2b2b2" HeightRequest="1" VerticalOptions="End"/>-->
+               <CarouselView Grid.Row="0">
+
+               </CarouselView>
+               <!--Row 1-->
+               <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Fill"
+                            Margin="0,0,0,20" BackgroundColor="Aqua">
+                   <Button Text="Einbuchen" />
+                   <Button Text="Ausbuchen" HorizontalOptions="CenterAndExpand"/>
+                   <Button Text="Öffnen"/>
+               </StackLayout>
+               
+           </Grid>
+           <BoxView Grid.Row="1" Color="#b2b2b2" HeightRequest="1" VerticalOptions="End"/>
+       </Grid>
+    </ContentPage.Content>
+</ContentPage>
