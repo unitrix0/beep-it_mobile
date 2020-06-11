@@ -1,6 +1,4 @@
-using System;
-
-namespace FontAwesome
+namespace Mobile.Helpers
 {
     /// <summary>
     /// The unicode values for all FontAwesome icons.

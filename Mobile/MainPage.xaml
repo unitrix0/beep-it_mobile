@@ -5,7 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
              xmlns:views="clr-namespace:Mobile.Views;assembly=Mobile"
-             xmlns:fontAwesome="clr-namespace:FontAwesome;assembly=Mobile"
+             xmlns:fontAwesome="clr-namespace:Mobile.Helpers;assembly=Mobile"
              mc:Ignorable="d"
              x:Class="Mobile.MainPage"
              android:TabbedPage.ToolbarPlacement="Bottom">
@@ -13,7 +13,7 @@
     <views:ScanPage Title="Einscannen">
         <views:ScanPage.IconImageSource>
             <FontImageSource FontFamily="{StaticResource FontAwesomeSolid}" 
-                             Glyph="{x:Static fontAwesome:FontAwesomeIcons.Receipt}"
+                             Glyph="{x:Static fontAwesome:FontAwesomeIcons.Barcode}"
                              Size="Medium"/>
         </views:ScanPage.IconImageSource>
     </views:ScanPage>

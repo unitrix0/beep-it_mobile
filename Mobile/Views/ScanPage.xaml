@@ -1,50 +1,60 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<views:TabPageBase xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Mobile.ViewModels;assembly=Mobile"
-             xmlns:fontAwesome="clr-namespace:FontAwesome;assembly=Mobile"
+             xmlns:views="clr-namespace:Mobile.Views;assembly=Mobile"
+             xmlns:zxing="clr-namespace:ZXing.Net.Mobile.Forms;assembly=ZXing.Net.Mobile.Forms"
+             xmlns:helpers="clr-namespace:Mobile.Helpers;assembly=Mobile"
              mc:Ignorable="d"
              x:Class="Mobile.Views.ScanPage">
     <ContentPage.BindingContext>
         <viewModels:ScanPageViewModel/>
     </ContentPage.BindingContext>
-    <ContentPage.Content>
-       <Grid>
-           <Grid.RowDefinitions>
-               <RowDefinition Height="Auto"/>
-               <RowDefinition Height="*"/>
-           </Grid.RowDefinitions>
-           <BoxView Grid.Row="0" Color="#f6f6f6"/>
-           <Label Grid.Row="0" Text="Scan" FontSize="Title" FontAttributes="Bold" Margin="10,5"/>
-           <BoxView Grid.Row="0" Color="#b2b2b2" HeightRequest="1" VerticalOptions="End"/>
-           
-           <!--Row 1-->
-           <Grid Grid.Row="1">
-               <Grid.RowDefinitions>
-                   <RowDefinition Height="*"/>
-                   <RowDefinition Height="Auto"/>
-               </Grid.RowDefinitions>
-               <!--<BoxView Grid.Row="0" Color="#b2b2b2" HeightRequest="1" VerticalOptions="End"/>-->
-              <CarouselView Grid.Row="0"></CarouselView>
-               <!--Row 1-->
-               <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center"
-                            Margin="0,15,0,20">
-                   <Button Text="{x:Static fontAwesome:FontAwesomeIcons.AngleDoubleDown}" 
-                           FontFamily="{StaticResource FontAwesomeSolid}" FontSize="Large"
-                           BackgroundColor="Transparent" BorderColor="DodgerBlue" BorderWidth="1"/>
-                   <Button Text="{x:Static fontAwesome:FontAwesomeIcons.AngleDoubleUp}" 
-                           FontFamily="{StaticResource FontAwesomeSolid}" FontSize="Large"
-                           HorizontalOptions="CenterAndExpand" BackgroundColor="Transparent" 
-                           BorderColor="DodgerBlue" BorderWidth="1" Margin="25,0,25,0"/>
-                   <Button Text="{x:Static fontAwesome:FontAwesomeIcons.BoxOpen}" 
-                           FontFamily="{StaticResource FontAwesomeSolid}" FontSize="Large"
-                           BackgroundColor="Transparent" BorderColor="DodgerBlue" BorderWidth="1"/>
-               </StackLayout>
-               
-           </Grid>
-           <BoxView Grid.Row="1" Color="#b2b2b2" HeightRequest="1" VerticalOptions="End"/>
-       </Grid>
-    </ContentPage.Content>
-</ContentPage>
+    <views:TabPageBase.GridContent>
+        <Grid RowSpacing="0" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!--Row 0-->
+            <StackLayout Grid.Row="0">
+                <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                  BorderColor="#aaaaaa" BackgroundColor="Transparent"
+                  Padding="1" Margin="10" HasShadow="False">
+                    <zxing:ZXingScannerView x:Name="Scanner" 
+                                            IsScanning="{Binding ScannerIsScanning, Mode=TwoWay}" IsVisible="{Binding ScannerVisible}" 
+                                            IsAnalyzing="{Binding ScannerIsAnalyzing}"
+                                            ScanResultCommand="{Binding OnBarcodeDetected}"/>
+                </Frame>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                    <Label Text="{Binding Source={x:Reference Scanner}, Path=IsVisible}" Margin="0,0,10,0" />
+                    <Label Text="{Binding Source={x:Reference Scanner}, Path=IsScanning}" Margin="0,0,10,0"/>
+                    <Label Text="{Binding ScanMode}" Margin="0,0,10,0"/>
+                    <Label Text="{Binding Barcode}"/>
+                </StackLayout>
+            </StackLayout>
+
+            <!--Row 1-->
+            <BoxView Grid.Row="1" HeightRequest="1" Color="#b2b2b2" VerticalOptions="Start"/>
+            <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center"
+                         Margin="0,15,0,20">
+                <Button x:Name ="BtnCheckIn" Text="{x:Static helpers:FontAwesomeIcons.AngleDoubleDown}" 
+                        FontFamily="{StaticResource FontAwesomeSolid}" FontSize="Large"
+                        BackgroundColor="Transparent" BorderColor="DodgerBlue" BorderWidth="1"
+                        Command="{Binding OnStartScan}" CommandParameter="{x:Static helpers:ScanModeEnum.CheckIn}"/>
+                <Button x:Name="BtnCheckOut" Text="{x:Static helpers:FontAwesomeIcons.AngleDoubleUp}" 
+                        FontFamily="{StaticResource FontAwesomeSolid}" FontSize="Large"
+                        HorizontalOptions="CenterAndExpand" BackgroundColor="Transparent" 
+                        BorderColor="DodgerBlue" BorderWidth="1" Margin="25,0,25,0"
+                        Command="{Binding OnStartScan}" CommandParameter="{x:Static helpers:ScanModeEnum.CheckIn}"/>
+                <Button x:Name="BtnOpen" Text="{x:Static helpers:FontAwesomeIcons.BoxOpen}" 
+                        FontFamily="{StaticResource FontAwesomeSolid}" FontSize="Large"
+                        BackgroundColor="Transparent" BorderColor="DodgerBlue" BorderWidth="1"
+                        Command="{Binding OnStartScan}" CommandParameter="{x:Static helpers:ScanModeEnum.CheckIn}"/>
+            </StackLayout>
+        </Grid>
+    </views:TabPageBase.GridContent>
+</views:TabPageBase>

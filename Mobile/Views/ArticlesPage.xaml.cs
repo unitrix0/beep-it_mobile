@@ -4,7 +4,7 @@ using Xamarin.Forms.Xaml;
 namespace Mobile.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ArticlesPage : ContentPage
+    public partial class ArticlesPage : TabPageBase
     {
         public ArticlesPage()
         {

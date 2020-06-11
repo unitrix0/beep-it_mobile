@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="Mobile.Views.TabPageBase">
+    <ContentPage.Content>
+        <Grid RowSpacing="0" x:Name="MainContent">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <BoxView Grid.Row="0" Color="#f6f6f6"/>
+            <Label Grid.Row="0" Text="Scan" FontSize="Title" FontAttributes="Bold" Margin="10,5"/>
+            <BoxView Grid.Row="0" Color="#b2b2b2" HeightRequest="1" VerticalOptions="End"/>
+
+            <!--<StackLayout Grid.Row="1" x:Name="MainContent" VerticalOptions="Fill" HorizontalOptions="Fill" />-->
+            <BoxView Grid.Row="1" Color="#b2b2b2" HeightRequest="1" VerticalOptions="End"/>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
