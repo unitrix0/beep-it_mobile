@@ -24,6 +24,15 @@ namespace Mobile.ViewModels
             set => SetProperty(ref _pageIcon, value);
         }
 
+        /// <summary>
+        /// Setzt das backing field auf den angegebenen Wert und löst <see cref="OnPropertyChanged"/> auf.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="backingField">Backing field dessen Wert gesetzt werden soll</param>
+        /// <param name="value">Wert der gesetzt werden soll</param>
+        /// <param name="propertyName">Name der Property die geändert wurde. Default: <seealso cref="CallerMemberNameAttribute"/></param>
+        /// <param name="onChanged">Zusätzliche Aktion die nach dem Ändern des Wertes ausgeführt werden soll</param>
+        /// <returns></returns>
         protected bool SetProperty<T>(ref T backingField, T value,
             [CallerMemberName] string propertyName = "",
             Action onChanged = null)
@@ -37,7 +46,6 @@ namespace Mobile.ViewModels
             return true;
         }
 
-        
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChangedEventHandler changed = PropertyChanged;

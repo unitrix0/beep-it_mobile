@@ -11,36 +11,27 @@ namespace Mobile.ViewModels
 {
     class ScanPageViewModel : BaseViewModel
     {
-        private ScanModeEnum _scanMode;
+        private ScanModeEnum _runningScanMode;
         private bool _scannerVisible;
-        private bool _scannerIsScanning;
         private bool _scannerIsAnalyzing;
         private string _barcode;
 
-        public ScanModeEnum ScanMode
+        public ScanModeEnum RunningScanMode
         {
-            get => _scanMode;
-            set => SetProperty(ref _scanMode, value);
+            get => _runningScanMode;
+            set => SetProperty(ref _runningScanMode, value, nameof(RunningScanMode), 
+                () => ((Command) OnStartScan).ChangeCanExecute());
         }
-
         public bool ScannerVisible
         {
             get => _scannerVisible;
             set => SetProperty(ref _scannerVisible, value);
         }
-
-        public bool ScannerIsScanning
-        {
-            get => _scannerIsScanning;
-            set => SetProperty(ref _scannerIsScanning, value);
-        }
-
         public bool ScannerIsAnalyzing
         {
             get => _scannerIsAnalyzing;
             set => SetProperty(ref _scannerIsAnalyzing, value);
         }
-
         public string Barcode
         {
             get => _barcode;
@@ -53,25 +44,30 @@ namespace Mobile.ViewModels
 
         public ScanPageViewModel()
         {
-            Title = FontAwesomeIcons.AngleDoubleDown;
             OnBarcodeDetected = new Command<Result>(BarcodeDetected);
-            OnStartScan = new Command<ScanModeEnum>(StartScan);
+            OnStartScan = new Command<ScanModeEnum>(StartScan, scanMode => RunningScanMode == scanMode ||
+                                                                           RunningScanMode == ScanModeEnum.None);
+            ScannerVisible = false;
         }
 
         private void StartScan(ScanModeEnum mode)
         {
-            ScanMode = mode;
+            RunningScanMode = mode;
             ScannerVisible = true;
-            ScannerIsScanning = true;
             ScannerIsAnalyzing = true;
         }
 
         private void BarcodeDetected(Result result)
         {
-            Barcode = $"({result.BarcodeFormat}) {result.Text}";
-            ScannerVisible = false;
-            ScannerIsScanning = false;
-            ScannerIsAnalyzing = false;
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                ScannerVisible = false;
+                ScannerIsAnalyzing = false;
+                RunningScanMode = ScanModeEnum.None;
+
+                if (result != null)
+                    Barcode = $"({result.BarcodeFormat}) {result.Text}";
+            });
         }
     }
 }

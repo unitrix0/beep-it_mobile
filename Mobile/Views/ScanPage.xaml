@@ -9,6 +9,7 @@
              xmlns:helpers="clr-namespace:Mobile.Helpers;assembly=Mobile"
              mc:Ignorable="d"
              x:Class="Mobile.Views.ScanPage">
+
     <ContentPage.BindingContext>
         <viewModels:ScanPageViewModel/>
     </ContentPage.BindingContext>
@@ -23,17 +24,19 @@
             <StackLayout Grid.Row="0">
                 <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
                   BorderColor="#aaaaaa" BackgroundColor="Transparent"
-                  Padding="1" Margin="10" HasShadow="False">
-                    <zxing:ZXingScannerView x:Name="Scanner" 
-                                            IsScanning="{Binding ScannerIsScanning, Mode=TwoWay}" IsVisible="{Binding ScannerVisible}" 
-                                            IsAnalyzing="{Binding ScannerIsAnalyzing}"
+                  Padding="1" Margin="10" HasShadow="False" >
+                    <zxing:ZXingScannerView x:Name="Scanner" IsScanning="True"
+                                            IsVisible="{Binding ScannerVisible}" IsAnalyzing="{Binding ScannerIsAnalyzing}"
                                             ScanResultCommand="{Binding OnBarcodeDetected}"/>
                 </Frame>
-                <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
-                    <Label Text="{Binding Source={x:Reference Scanner}, Path=IsVisible}" Margin="0,0,10,0" />
-                    <Label Text="{Binding Source={x:Reference Scanner}, Path=IsScanning}" Margin="0,0,10,0"/>
-                    <Label Text="{Binding ScanMode}" Margin="0,0,10,0"/>
+                <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+                    <!--<Label Text="{Binding Source={x:Reference Scanner}, Path=IsVisible}" Margin="0,0,10,0" />-->
+                    <!--<Label Text="{Binding Source={x:Reference Scanner}, Path=IsScanning}" Margin="0,0,10,0"/>-->
+                    <!--<Label Text="{Binding Source={x:Reference Scanner}, Path=IsAnalyzing}" Margin="0,0,10,0"/>-->
+
+                    <Label Text="{Binding RunningScanMode}" Margin="0,0,10,0"/>
                     <Label Text="{Binding Barcode}"/>
+                    <Button Text="Reset" Command="{Binding OnBarcodeDetected}"/>
                 </StackLayout>
             </StackLayout>
 
@@ -41,19 +44,61 @@
             <BoxView Grid.Row="1" HeightRequest="1" Color="#b2b2b2" VerticalOptions="Start"/>
             <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center"
                          Margin="0,15,0,20">
-                <Button x:Name ="BtnCheckIn" Text="{x:Static helpers:FontAwesomeIcons.AngleDoubleDown}" 
-                        FontFamily="{StaticResource FontAwesomeSolid}" FontSize="Large"
-                        BackgroundColor="Transparent" BorderColor="DodgerBlue" BorderWidth="1"
-                        Command="{Binding OnStartScan}" CommandParameter="{x:Static helpers:ScanModeEnum.CheckIn}"/>
-                <Button x:Name="BtnCheckOut" Text="{x:Static helpers:FontAwesomeIcons.AngleDoubleUp}" 
-                        FontFamily="{StaticResource FontAwesomeSolid}" FontSize="Large"
-                        HorizontalOptions="CenterAndExpand" BackgroundColor="Transparent" 
-                        BorderColor="DodgerBlue" BorderWidth="1" Margin="25,0,25,0"
-                        Command="{Binding OnStartScan}" CommandParameter="{x:Static helpers:ScanModeEnum.CheckIn}"/>
+
+                <Button x:Name ="BtnCheckIn" 
+                        Text="{x:Static helpers:FontAwesomeIcons.AngleDoubleDown}" 
+                        FontFamily="{StaticResource FontAwesomeSolid}" 
+                        FontSize="Large" Command="{Binding OnStartScan}" 
+                        CommandParameter="{x:Static helpers:ScanModeEnum.CheckIn}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Source={x:Reference BtnCheckIn}, Path=IsEnabled}" Value="False" TargetType="Button">
+                                    <Setter Property="BackgroundColor" Value="Transparent"/>
+                                    <Setter Property="BorderColor" Value="DodgerBlue"/>
+                                    <Setter Property="BorderWidth" Value="1"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button x:Name="BtnCheckOut" BackgroundColor="DodgerBlue"
+                        Text="{x:Static helpers:FontAwesomeIcons.AngleDoubleUp}"
+                        FontFamily="{StaticResource FontAwesomeSolid}" 
+                        FontSize="Large" Margin="25,0,25,0"
+                        Command="{Binding OnStartScan}" CommandParameter="{x:Static helpers:ScanModeEnum.CheckOut}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Source={x:Reference BtnCheckOut}, Path=IsEnabled}" Value="False" TargetType="Button">
+                                    <Setter Property="BackgroundColor" Value="Transparent"/>
+                                    <Setter Property="BorderColor" Value="DodgerBlue"/>
+                                    <Setter Property="BorderWidth" Value="1"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
                 <Button x:Name="BtnOpen" Text="{x:Static helpers:FontAwesomeIcons.BoxOpen}" 
                         FontFamily="{StaticResource FontAwesomeSolid}" FontSize="Large"
-                        BackgroundColor="Transparent" BorderColor="DodgerBlue" BorderWidth="1"
-                        Command="{Binding OnStartScan}" CommandParameter="{x:Static helpers:ScanModeEnum.CheckIn}"/>
+                        Command="{Binding OnStartScan}" CommandParameter="{x:Static helpers:ScanModeEnum.Open}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="BackgroundColor" Value="DodgerBlue"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Source={x:Reference BtnOpen}, Path=IsEnabled}" Value="False" TargetType="Button">
+                                    <Setter Property="BackgroundColor" Value="Transparent"/>
+                                    <Setter Property="BorderColor" Value="DodgerBlue"/>
+                                    <Setter Property="BorderWidth" Value="1"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </StackLayout>
         </Grid>
     </views:TabPageBase.GridContent>
