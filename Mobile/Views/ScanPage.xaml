@@ -9,7 +9,7 @@
              xmlns:helpers="clr-namespace:Mobile.Helpers;assembly=Mobile"
              mc:Ignorable="d"
              x:Class="Mobile.Views.ScanPage">
-
+    
     <ContentPage.BindingContext>
         <viewModels:ScanPageViewModel/>
     </ContentPage.BindingContext>
@@ -23,30 +23,29 @@
             <!--Row 0-->
             <StackLayout Grid.Row="0">
                 <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                  BorderColor="#aaaaaa" BackgroundColor="Transparent"
+                  BorderColor="#b2b2b2" BackgroundColor="Transparent"
                   Padding="1" Margin="10" HasShadow="False" >
                     <zxing:ZXingScannerView x:Name="Scanner" IsScanning="True"
                                             IsVisible="{Binding ScannerVisible}" IsAnalyzing="{Binding ScannerIsAnalyzing}"
                                             ScanResultCommand="{Binding OnBarcodeDetected}"/>
                 </Frame>
-                <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
-                    <!--<Label Text="{Binding Source={x:Reference Scanner}, Path=IsVisible}" Margin="0,0,10,0" />-->
+                <!--<StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+                    --><!--<Label Text="{Binding Source={x:Reference Scanner}, Path=IsVisible}" Margin="0,0,10,0" />-->
                     <!--<Label Text="{Binding Source={x:Reference Scanner}, Path=IsScanning}" Margin="0,0,10,0"/>-->
-                    <!--<Label Text="{Binding Source={x:Reference Scanner}, Path=IsAnalyzing}" Margin="0,0,10,0"/>-->
+                    <!--<Label Text="{Binding Source={x:Reference Scanner}, Path=IsAnalyzing}" Margin="0,0,10,0"/>--><!--
 
                     <Label Text="{Binding RunningScanMode}" Margin="0,0,10,0"/>
                     <Label Text="{Binding Barcode}"/>
                     <Button Text="Reset" Command="{Binding OnBarcodeDetected}"/>
-                </StackLayout>
+                </StackLayout>-->
             </StackLayout>
 
             <!--Row 1-->
             <BoxView Grid.Row="1" HeightRequest="1" Color="#b2b2b2" VerticalOptions="Start"/>
-            <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center"
-                         Margin="0,15,0,20">
+            <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="0,15,0,20">
 
-                <Button x:Name ="BtnCheckIn" 
-                        Text="{x:Static helpers:FontAwesomeIcons.AngleDoubleDown}" 
+                <Button x:Name ="BtnCheckIn" WidthRequest="90"
+                        Text="{x:Static helpers:FontAwesomeIcons.AngleDoubleDown}" TextColor="Black"
                         FontFamily="{StaticResource FontAwesomeSolid}" 
                         FontSize="Large" Command="{Binding OnStartScan}" 
                         CommandParameter="{x:Static helpers:ScanModeEnum.CheckIn}">
@@ -64,8 +63,8 @@
                     </Button.Style>
                 </Button>
 
-                <Button x:Name="BtnCheckOut" BackgroundColor="DodgerBlue"
-                        Text="{x:Static helpers:FontAwesomeIcons.AngleDoubleUp}"
+                <Button x:Name="BtnCheckOut" WidthRequest="90"
+                        Text="{x:Static helpers:FontAwesomeIcons.AngleDoubleUp}" TextColor="Black"
                         FontFamily="{StaticResource FontAwesomeSolid}" 
                         FontSize="Large" Margin="25,0,25,0"
                         Command="{Binding OnStartScan}" CommandParameter="{x:Static helpers:ScanModeEnum.CheckOut}">
@@ -83,8 +82,10 @@
                     </Button.Style>
                 </Button>
 
-                <Button x:Name="BtnOpen" Text="{x:Static helpers:FontAwesomeIcons.BoxOpen}" 
-                        FontFamily="{StaticResource FontAwesomeSolid}" FontSize="Large"
+                <Button x:Name="BtnOpen" WidthRequest="90"
+                        Text="{x:Static helpers:FontAwesomeIcons.BoxOpen}" TextColor="Black"
+                        FontFamily="{StaticResource FontAwesomeSolid}" 
+                        FontSize="Large"
                         Command="{Binding OnStartScan}" CommandParameter="{x:Static helpers:ScanModeEnum.Open}">
                     <Button.Style>
                         <Style TargetType="Button">

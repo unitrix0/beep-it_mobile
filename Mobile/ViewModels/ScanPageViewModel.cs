@@ -48,6 +48,7 @@ namespace Mobile.ViewModels
             OnStartScan = new Command<ScanModeEnum>(StartScan, scanMode => RunningScanMode == scanMode ||
                                                                            RunningScanMode == ScanModeEnum.None);
             ScannerVisible = false;
+            Title = "Einscannen";
         }
 
         private void StartScan(ScanModeEnum mode)
