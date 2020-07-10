@@ -4,13 +4,14 @@
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:Mobile.ViewModels;assembly=Mobile"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
              mc:Ignorable="d"
              x:Class="Mobile.Views.TabPageBase"
-             Title="{Binding Title}">
+             prism:ViewModelLocator.AutowireViewModel="True">
 
-    <ContentPage.BindingContext>
-        <viewModels:BaseViewModel/>
-    </ContentPage.BindingContext>
+    <d:ContentPage.BindingContext>
+        <viewModels:TabPageBaseViewModel/>
+    </d:ContentPage.BindingContext>
 
     <ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness">
@@ -24,7 +25,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <BoxView Grid.Row="0" Color="#f6f6f6"/>
-            <Label Grid.Row="0" Text="Scan" FontSize="Title" FontAttributes="Bold" Margin="10,5"/>
+            <Label Grid.Row="0" Text="{Binding Title}" FontSize="Title" FontAttributes="Bold" Margin="10,5"/>
             <BoxView Grid.Row="0" Color="#b2b2b2" HeightRequest="1" VerticalOptions="End"/>
 
             <!--<StackLayout Grid.Row="1" x:Name="MainContent" VerticalOptions="Fill" HorizontalOptions="Fill" />-->

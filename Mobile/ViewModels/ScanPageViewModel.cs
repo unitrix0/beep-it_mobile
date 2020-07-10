@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
+using Mobile.Data;
 using Mobile.Helpers;
+using Mobile.Views;
+using Prism.Navigation;
 using Xamarin.Forms;
 using ZXing;
 
 namespace Mobile.ViewModels
 {
-    class ScanPageViewModel : BaseViewModel
+    public class ScanPageViewModel : TabPageBaseViewModel
     {
         private ScanModeEnum _runningScanMode;
         private bool _scannerVisible;
@@ -19,8 +22,8 @@ namespace Mobile.ViewModels
         public ScanModeEnum RunningScanMode
         {
             get => _runningScanMode;
-            set => SetProperty(ref _runningScanMode, value, nameof(RunningScanMode), 
-                () => ((Command) OnStartScan).ChangeCanExecute());
+            set => SetProperty(ref _runningScanMode, value,
+                () => ((Command)OnStartScan).ChangeCanExecute());
         }
         public bool ScannerVisible
         {
@@ -44,11 +47,16 @@ namespace Mobile.ViewModels
 
         public ScanPageViewModel()
         {
+        }
+
+        public ScanPageViewModel(INavigationService navService) : base(navService)
+        {
             OnBarcodeDetected = new Command<Result>(BarcodeDetected);
             OnStartScan = new Command<ScanModeEnum>(StartScan, scanMode => RunningScanMode == scanMode ||
                                                                            RunningScanMode == ScanModeEnum.None);
             ScannerVisible = false;
-            Title = "Einscannen";
+            Title = "Scannen";
+            PageIcon = FontAwesomeIcons.Receipt;
         }
 
         private void StartScan(ScanModeEnum mode)
@@ -66,8 +74,8 @@ namespace Mobile.ViewModels
                 ScannerIsAnalyzing = false;
                 RunningScanMode = ScanModeEnum.None;
 
-                if (result != null)
-                    Barcode = $"({result.BarcodeFormat}) {result.Text}";
+                if (result != null) NavigationService.NavigateAsync(nameof(ArticleBasePage));
+                //Barcode = $"({result.BarcodeFormat}) {result.Text}";
             });
         }
     }

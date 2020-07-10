@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:Mobile.ViewModels;assembly=Mobile"
+             xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             mc:Ignorable="d"
+             x:Class="Mobile.Views.LoginPage">
+
+    <d:ContentPage.BindingContext>
+        <viewModels:LoginPageViewModel/>
+    </d:ContentPage.BindingContext>
+    
+    <ContentPage.Content>
+        <AbsoluteLayout>
+            <Image Source="kitchen.jpg" Aspect="AspectFill" 
+                   AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All"/>
+            <Grid AbsoluteLayout.LayoutFlags="All" AbsoluteLayout.LayoutBounds="0,0,1,1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <BoxView BackgroundColor="#b0ffffff" Grid.Row="1"/>
+                <StackLayout Grid.Row="1" Padding="25,20">
+                    
+                    <Entry Placeholder="Benutzername" Opacity="1" Text="{Binding UserName}"/>
+                    <Entry IsPassword="True" Placeholder="Passwort" Opacity="1" Text="{Binding Password}"/>
+                    <Button Text="Login" BackgroundColor="LimeGreen" Margin="0,15,0,0"
+                            Command="{Binding LoginCmd}"/>
+                </StackLayout>
+            </Grid>
+        </AbsoluteLayout>
+    </ContentPage.Content>
+</ContentPage>

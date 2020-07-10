@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
-using System.Reactive.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -15,85 +15,51 @@ namespace Mobile.Helpers
     {
         private const string JsonMediaType = "application/json";
 
-        public static IObservable<string> GetStringByQueryAsync(this HttpClient client, string requestUri, object paramObj)
+        public static async Task<string> GetStringByQueryAsync(this HttpClient client, string requestUri, object paramObj)
         {
-            return Observable.Create<string>(async observer =>
-            {
-                try
-                {
-                    var qry = new QueryBuilder(paramObj.ToKeyValuePairs());
-                    string result = await client.GetStringAsync(requestUri + qry);
-
-                    observer.OnNext(result);
-                    observer.OnCompleted();
-                }
-                catch (Exception ex)
-                {
-                    observer.OnError(ex);
-                }
-            });
-
+            var qry = new QueryBuilder(paramObj.ToKeyValuePairs());
+            return await client.GetStringAsync(requestUri + qry);
         }
 
-        public static IObservable<HttpResponseMessage> GetAsyncQuery(this HttpClient client, string requestUri,
+        public static async Task<HttpResponseMessage> GetAsyncQuery(this HttpClient client, string requestUri,
             object paramObj)
         {
-            return Observable.Create<HttpResponseMessage>(async observer =>
-            {
-                try
-                {
-                    var qry = new QueryBuilder(paramObj.ToKeyValuePairs());
-                    HttpResponseMessage response = await client.GetAsync(requestUri + qry);
-
-                    observer.OnNext(response);
-                    observer.OnCompleted();
-                }
-                catch (Exception ex)
-                {
-                    observer.OnError(ex);
-                }
-            });
+            var qry = new QueryBuilder(paramObj.ToKeyValuePairs());
+            return await client.GetAsync(requestUri + qry);
         }
 
-        public static IObservable<HttpResponseMessage> DeleteAsyncQuery(this HttpClient client, string requestUri,
+        public static async Task<HttpResponseMessage> DeleteAsyncQuery(this HttpClient client, string requestUri,
             object paramObj)
         {
-            return Observable.Create<HttpResponseMessage>(async observer =>
-            {
-                try
-                {
-                    var qry = new QueryBuilder(paramObj.ToKeyValuePairs());
-                    HttpResponseMessage result = await client.DeleteAsync(requestUri + qry);
-
-                    observer.OnNext(result);
-                    observer.OnCompleted();
-                }
-                catch (Exception ex)
-                {
-                    observer.OnError(ex);
-                }
-            });
-
+            var qry = new QueryBuilder(paramObj.ToKeyValuePairs());
+            return await client.DeleteAsync(requestUri + qry);
         }
 
-        public static IObservable<HttpResponseMessage> PostAsync(this HttpClient client, string requestUri, object value)
+        public static async Task<T> PostAsync<T>(this HttpClient client, string requestUri, object value)
         {
-            return Observable.Create<HttpResponseMessage>(async observer =>
-            {
-                try
-                {
-                    string json = JsonConvert.SerializeObject(value);
-                    var content = new StringContent(json, Encoding.UTF8, JsonMediaType);
+            string json = JsonConvert.SerializeObject(value);
+            var content = new StringContent(json, Encoding.UTF8, JsonMediaType);
 
-                    var result = await client.PostAsync(requestUri, content);
-                    observer.OnNext(result);
-                    observer.OnCompleted();
-                }
-                catch (Exception ex)
+            HttpResponseMessage result = await client.PostAsync(requestUri, content);
+            string resultContent = await result.Content.ReadAsStringAsync();
+
+            if (result.IsSuccessStatusCode) return JsonConvert.DeserializeObject<T>(resultContent); 
+
+            if (result.StatusCode == HttpStatusCode.InternalServerError &&
+                result.Headers.Contains("Application-Error"))
+            {
+                var appError = result.Headers
+                    .First(h => h.Key == "Application-Error")
+                    .Value.First();
+                var exception = JsonConvert.DeserializeObject<Exception>(resultContent, new JsonSerializerSettings()
                 {
-                    observer.OnError(ex);
-                }
-            });
+                    StringEscapeHandling = StringEscapeHandling.EscapeNonAscii
+                });
+                throw new Exception($"{(int)result.StatusCode} - {result.StatusCode} \n{appError}", exception);
+            }
+
+            throw new Exception($"{(int)result.StatusCode} - {result.StatusCode}");
+
         }
 
         private static Dictionary<string, string> ToKeyValuePairs(this object source)

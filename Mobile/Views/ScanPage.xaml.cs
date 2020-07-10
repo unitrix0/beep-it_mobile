@@ -16,7 +16,6 @@ namespace Mobile.Views
         public ScanPage()
         {
             InitializeComponent();
-            BindingContext = new ScanPageViewModel();
         }
     }
 }

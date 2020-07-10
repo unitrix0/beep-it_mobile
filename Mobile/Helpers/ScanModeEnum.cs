@@ -1,6 +1,6 @@
 ﻿namespace Mobile.Helpers
 {
-    internal enum ScanModeEnum
+    public enum ScanModeEnum
     {
         None = 0,
         CheckIn = 1,

@@ -5,36 +5,38 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
              xmlns:views="clr-namespace:Mobile.Views;assembly=Mobile"
-             xmlns:fontAwesome="clr-namespace:Mobile.Helpers;assembly=Mobile"
+             xmlns:helpers="clr-namespace:Mobile.Helpers;assembly=Mobile"
              mc:Ignorable="d"
              x:Class="Mobile.MainPage"
-             android:TabbedPage.ToolbarPlacement="Bottom">
+             android:TabbedPage.ToolbarPlacement="Bottom"
+             Title="Beep-It!">
 
-    <views:ScanPage Title="Einscannen">
-        <views:ScanPage.IconImageSource>
+   <views:ScanPage>
+       <views:ScanPage.IconImageSource>
             <FontImageSource FontFamily="{StaticResource FontAwesomeSolid}" 
-                             Glyph="{x:Static fontAwesome:FontAwesomeIcons.Barcode}"
+                             Glyph="{x:Static helpers:FontAwesomeIcons.Barcode}"
                              Size="Medium"/>
         </views:ScanPage.IconImageSource>
     </views:ScanPage>
-    <views:ArticlesPage Title="Artikel">
+
+    <views:ArticlesPage>
         <views:ArticlesPage.IconImageSource>
             <FontImageSource FontFamily="{StaticResource FontAwesomeSolid}" 
-                             Glyph="{x:Static fontAwesome:FontAwesomeIcons.Box}"
+                             Glyph="{x:Static helpers:FontAwesomeIcons.Box}"
                              Size="Medium"/>
         </views:ArticlesPage.IconImageSource>
     </views:ArticlesPage>
-    <views:ShoppingListPage Title="Einkaufsliste">
+    <views:ShoppingListPage>
         <views:ShoppingListPage.IconImageSource>
             <FontImageSource FontFamily="{StaticResource FontAwesomeSolid}" 
-                             Glyph="{x:Static fontAwesome:FontAwesomeIcons.ShoppingCart}"
+                             Glyph="{x:Static helpers:FontAwesomeIcons.ShoppingCart}"
                              Size="Medium"/>
         </views:ShoppingListPage.IconImageSource>
     </views:ShoppingListPage>
-    <views:SettingsPage Title="Profil">
+    <views:SettingsPage>
         <views:SettingsPage.IconImageSource>
             <FontImageSource FontFamily="{StaticResource FontAwesomeSolid}" 
-                             Glyph="{x:Static fontAwesome:FontAwesomeIcons.User}"
+                             Glyph="{x:Static helpers:FontAwesomeIcons.User}"
                              Size="Medium"/>
         </views:SettingsPage.IconImageSource>
     </views:SettingsPage>
