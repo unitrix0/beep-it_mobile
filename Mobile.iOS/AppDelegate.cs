@@ -1,4 +1,6 @@
 ﻿using Foundation;
+using Mobile.Abstractions;
+using Mobile.iOS.Helpers;
 using Prism;
 using Prism.Ioc;
 using UIKit;
@@ -33,6 +35,7 @@ namespace Mobile.iOS
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // Register any platform specific implementations
+            containerRegistry.RegisterSingleton<ITokenRepo, PropertiesTokenRepo>();
         }
     }
 }

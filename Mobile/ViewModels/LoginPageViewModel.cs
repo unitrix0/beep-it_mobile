@@ -46,7 +46,7 @@ namespace Mobile.ViewModels
         {
             try
             {
-                //await _authService.Login(UserName, Password);
+                await _authService.Login(UserName, Password);
                 await NavigationService.NavigateAbsolutAsync(nameof(NavigationPage),nameof(MainPage));
             }
             catch (Exception exception)

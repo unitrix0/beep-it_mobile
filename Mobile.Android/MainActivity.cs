@@ -1,6 +1,8 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using Mobile.Abstractions;
+using Mobile.Droid.Helpers;
 using Prism;
 using Prism.Ioc;
 
@@ -34,6 +36,7 @@ namespace Mobile.Droid
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             // Register any platform specific implementations
+            containerRegistry.RegisterSingleton<ITokenRepo, SecureTokenRepo>();
         }
     }
 }

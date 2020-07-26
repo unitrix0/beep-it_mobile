@@ -4,11 +4,11 @@ namespace Mobile.Data
 {
     public class PermissionsToken
     {
-        public int UserId { get; private set; }
-        public PermissionFlags Flags { get; private set; }
-        public string PermissionsSerial { get; private set; }
-        public int EnvironmentId { get; private set; }
-        public bool IsValid { get; private set; }
+        public int UserId { get; }
+        public PermissionFlags Flags { get; }
+        public string PermissionsSerial { get; }
+        public int EnvironmentId { get; }
+        public bool IsValid { get; }
 
         public PermissionsToken(string tokenString)
         {

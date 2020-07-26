@@ -35,6 +35,9 @@ namespace Mobile
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IAppInfo, AppInfoImplementation>();
+            containerRegistry.RegisterSingleton<TokenContainer>();
+            var b = containerRegistry.IsRegistered<ITokenRepo>();
+            var r = containerRegistry.GetContainer().GetService<ITokenRepo>();
             containerRegistry.Register<IAuthenticationService, AuthenticationService>();
 
             containerRegistry.RegisterForNavigation<MainPage>();

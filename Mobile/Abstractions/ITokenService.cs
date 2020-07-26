@@ -6,9 +6,7 @@ namespace Mobile.Abstractions
 {
     public interface ITokenService
     {
-        IdentityToken IdentityToken { get; }
-        PermissionsToken PermissionsToken { get; }
-        User UserInfos { get; }
-        Task UpdatePermissionsToken();
+        Task UpdatePermissionsTokenAsync();
+        Task RefershTokenAsync();
     }
 }
