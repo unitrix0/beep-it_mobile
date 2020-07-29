@@ -22,8 +22,6 @@ namespace Mobile.Data
 
         public async Task Login(string userName, string password)
         {
-            var token = await _tokenContainer.GetIdentityToken();
-            
             var response = await _client.PostAsync<LoginResponse>("auth/login", new
             {
                 userName,
@@ -41,7 +39,13 @@ namespace Mobile.Data
 
         public async Task RefershTokenAsync()
         {
-            throw new NotImplementedException();
+            var response = await _client.PostAsync<RefreshTokenResponse>("auth/refreshToken", new
+            {
+                token = await _tokenContainer.GetIdentityToken(),
+                refershToken = await _tokenContainer.GetRefreshToken()
+            });
+
+            await _tokenContainer.LoadNewToken(response);
         }
     }
 }

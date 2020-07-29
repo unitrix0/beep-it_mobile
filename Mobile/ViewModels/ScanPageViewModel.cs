@@ -18,6 +18,7 @@ namespace Mobile.ViewModels
         private bool _scannerVisible;
         private bool _scannerIsAnalyzing;
         private string _barcode;
+        private bool _isScanning;
 
         public ScanModeEnum RunningScanMode
         {
@@ -34,6 +35,11 @@ namespace Mobile.ViewModels
         {
             get => _scannerIsAnalyzing;
             set => SetProperty(ref _scannerIsAnalyzing, value);
+        }
+        public bool IsScanning
+        {
+            get => _isScanning;
+            set => SetProperty(ref _isScanning, value);
         }
         public string Barcode
         {
@@ -54,16 +60,27 @@ namespace Mobile.ViewModels
             OnBarcodeDetected = new Command<Result>(BarcodeDetected);
             OnStartScan = new Command<ScanModeEnum>(StartScan, scanMode => RunningScanMode == scanMode ||
                                                                            RunningScanMode == ScanModeEnum.None);
-            ScannerVisible = false;
             Title = "Scannen";
             PageIcon = FontAwesomeIcons.Receipt;
+            ScannerVisible = true;
         }
 
         private void StartScan(ScanModeEnum mode)
         {
-            RunningScanMode = mode;
-            ScannerVisible = true;
-            ScannerIsAnalyzing = true;
+            if (RunningScanMode == mode)
+            {
+                RunningScanMode = ScanModeEnum.None;
+                //ScannerVisible = false;
+                IsScanning = false;
+                //ScannerIsAnalyzing = false;
+            }
+            else
+            {
+                RunningScanMode = mode;
+                ScannerVisible = true;
+                IsScanning = true;
+                ScannerIsAnalyzing = true;
+            }
         }
 
         private void BarcodeDetected(Result result)
@@ -72,6 +89,7 @@ namespace Mobile.ViewModels
             {
                 ScannerVisible = false;
                 ScannerIsAnalyzing = false;
+                IsScanning = false;
                 RunningScanMode = ScanModeEnum.None;
 
                 if (result != null) NavigationService.NavigateAsync(nameof(ArticleBasePage));

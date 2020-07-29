@@ -1,36 +1,70 @@
-﻿using System.Threading.Tasks;
-using Mobile.Abstractions;
+﻿using Mobile.Abstractions;
 using Mobile.Data;
 using Prism;
+using System.Threading.Tasks;
 
 namespace Mobile.iOS.Helpers
 {
     class PropertiesTokenRepo : ITokenRepo
     {
+        private readonly object _getLock = new object();
+
         public Task<string> GetRefreshToken()
         {
-            return Task<string>.Factory.StartNew(() => PrismApplicationBase.Current.Properties["RefreshToken"].ToString());
+            lock (_getLock)
+            {
+                return Task<string>.Factory.StartNew(() => PrismApplicationBase.Current.Properties.ContainsKey("RefreshToken")
+                        ? PrismApplicationBase.Current.Properties["RefreshToken"].ToString()
+                        : ""); 
+            }
         }
 
         public Task<string> GetIdentityToken()
         {
-            return Task<string>.Factory.StartNew(() => PrismApplicationBase.Current.Properties[nameof(IdentityToken)].ToString());
-        }
-
-        public Task SaveRefreshToken(string refreshToken)
-        {
-            return Task.Factory.StartNew(() =>
-                {
-                    PrismApplicationBase.Current.Properties[nameof(refreshToken)]= refreshToken;
-                });
-        }
-
-        public Task SaveIdentityToken(string identityToken)
-        {
-            return Task.Factory.StartNew(() =>
+            lock (_getLock)
             {
-                PrismApplicationBase.Current.Properties[nameof(IdentityToken)] = identityToken;
-            });
+                return Task<string>.Factory.StartNew(() => PrismApplicationBase.Current.Properties.ContainsKey(nameof(IdentityToken))
+                    ? PrismApplicationBase.Current.Properties[nameof(IdentityToken)].ToString()
+                    : ""); 
+            }
+        }
+
+        public async Task SaveRefreshToken(string refreshToken)
+        {
+            PrismApplicationBase.Current.Properties[nameof(refreshToken)] = refreshToken;
+            await PrismApplicationBase.Current.SavePropertiesAsync();
+        }
+
+        public async Task SaveIdentityToken(string identityToken)
+        {
+            PrismApplicationBase.Current.Properties[nameof(IdentityToken)] = identityToken;
+            await PrismApplicationBase.Current.SavePropertiesAsync();
+        }
+
+        public async Task SavePermissionsToken(string permissionsToken)
+        {
+            PrismApplicationBase.Current.Properties["Permissions"] = permissionsToken;
+            await PrismApplicationBase.Current.SavePropertiesAsync();
+        }
+
+        public Task<string> GetPermissionsToken()
+        {
+            return Task<string>.Factory.StartNew(() => PrismApplicationBase.Current.Properties.ContainsKey("Permissions")
+                ? PrismApplicationBase.Current.Properties["Permissions"].ToString()
+                : "");
+        }
+
+        public Task<string> GetUserObject()
+        {
+            return Task<string>.Factory.StartNew(() => PrismApplicationBase.Current.Properties.ContainsKey("MappedUser")
+                ? PrismApplicationBase.Current.Properties["MappedUser"].ToString()
+                : "");
+        }
+
+        public async Task SaveUserObject(string json)
+        {
+            PrismApplicationBase.Current.Properties["MappedUser"] = json;
+            await PrismApplicationBase.Current.SavePropertiesAsync();
         }
     }
 }

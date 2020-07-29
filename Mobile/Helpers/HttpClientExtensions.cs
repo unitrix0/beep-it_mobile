@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
@@ -60,6 +61,18 @@ namespace Mobile.Helpers
 
             throw new Exception($"{(int)result.StatusCode} - {result.StatusCode}");
 
+        }
+
+        /// <summary>
+        /// Setzt oder aktualisiert den Bearer-Token
+        /// </summary>
+        /// <param name="headers"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public static HttpRequestHeaders UpdateBearerToken(this HttpRequestHeaders headers, string token)
+        {
+            headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            return headers;
         }
 
         private static Dictionary<string, string> ToKeyValuePairs(this object source)

@@ -26,19 +26,20 @@
 
             <!--Row 0-->
             <StackLayout Grid.Row="0">
-                <zxing:ZXingScannerView x:Name="Scanner" IsScanning="True"
-                                        IsVisible="{Binding ScannerVisible}" IsAnalyzing="{Binding ScannerIsAnalyzing}"
-                                        ScanResultCommand="{Binding OnBarcodeDetected}"/>
+                <!-- -->
+                <zxing:ZXingScannerView x:Name="Scanner" 
+                                        IsScanning="{Binding IsScanning}" IsVisible="{Binding ScannerVisible}" IsAnalyzing="{Binding ScannerIsAnalyzing}"
+                                        ScanResultCommand="{Binding OnBarcodeDetected}" />
 
-                <!--<StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">-->
-                    <!--<Label Text="{Binding Source={x:Reference Scanner}, Path=IsVisible}" Margin="0,0,10,0" />
+                <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" VerticalOptions="Center">
+                    <Label Text="{Binding Source={x:Reference Scanner}, Path=IsVisible}" Margin="0,0,10,0" />
                     <Label Text="{Binding Source={x:Reference Scanner}, Path=IsScanning}" Margin="0,0,10,0"/>
                     <Label Text="{Binding Source={x:Reference Scanner}, Path=IsAnalyzing}" Margin="0,0,10,0"/>
 
                     <Label Text="{Binding RunningScanMode}" Margin="0,0,10,0"/>
                     <Label Text="{Binding Barcode}"/>
-                    <Button Text="Reset" Command="{Binding OnBarcodeDetected}"/>-->
-                <!--</StackLayout>-->
+                    <Button Text="Reset" Command="{Binding OnBarcodeDetected}"/>
+                </StackLayout>
             </StackLayout>
 
             <!--Row 1-->
