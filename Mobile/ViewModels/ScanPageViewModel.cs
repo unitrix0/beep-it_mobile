@@ -51,9 +51,7 @@ namespace Mobile.ViewModels
         public ICommand OnStartScan { get; }
 
 
-        public ScanPageViewModel()
-        {
-        }
+        public ScanPageViewModel() { }
 
         public ScanPageViewModel(INavigationService navService) : base(navService)
         {
@@ -70,9 +68,10 @@ namespace Mobile.ViewModels
             if (RunningScanMode == mode)
             {
                 RunningScanMode = ScanModeEnum.None;
-                //ScannerVisible = false;
+                ScannerVisible = false;
                 IsScanning = false;
-                //ScannerIsAnalyzing = false;
+                ScannerIsAnalyzing = false;
+                NavigationService.NavigateAsync(nameof(ArticleBasePage));
             }
             else
             {
@@ -85,16 +84,22 @@ namespace Mobile.ViewModels
 
         private void BarcodeDetected(Result result)
         {
-            Device.BeginInvokeOnMainThread(() =>
+            Device.BeginInvokeOnMainThread(async () =>
             {
                 ScannerVisible = false;
                 ScannerIsAnalyzing = false;
                 IsScanning = false;
                 RunningScanMode = ScanModeEnum.None;
-
-                if (result != null) NavigationService.NavigateAsync(nameof(ArticleBasePage));
                 //Barcode = $"({result.BarcodeFormat}) {result.Text}";
+
+                if (result != null)
+                {
+                    INavigationResult r = await NavigationService.NavigateAsync(nameof(ArticleBasePage),
+                        new NavigationParameters {{"barcode", result.Text}});
+                }
             });
+           
+
         }
     }
 }

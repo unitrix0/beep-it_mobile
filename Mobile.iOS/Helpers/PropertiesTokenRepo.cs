@@ -2,30 +2,31 @@
 using Mobile.Data;
 using Prism;
 using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace Mobile.iOS.Helpers
 {
     class PropertiesTokenRepo : ITokenRepo
     {
         private readonly object _getLock = new object();
-
-        public Task<string> GetRefreshToken()
+        
+        public Task<string> GetRefreshTokenAsync()
         {
             lock (_getLock)
             {
                 return Task<string>.Factory.StartNew(() => PrismApplicationBase.Current.Properties.ContainsKey("RefreshToken")
                         ? PrismApplicationBase.Current.Properties["RefreshToken"].ToString()
-                        : ""); 
+                        : "");
             }
         }
 
-        public Task<string> GetIdentityToken()
+        public Task<string> GetIdentityTokenAsync()
         {
             lock (_getLock)
             {
                 return Task<string>.Factory.StartNew(() => PrismApplicationBase.Current.Properties.ContainsKey(nameof(IdentityToken))
                     ? PrismApplicationBase.Current.Properties[nameof(IdentityToken)].ToString()
-                    : ""); 
+                    : "");
             }
         }
 
@@ -47,14 +48,14 @@ namespace Mobile.iOS.Helpers
             await PrismApplicationBase.Current.SavePropertiesAsync();
         }
 
-        public Task<string> GetPermissionsToken()
+        public Task<string> GetPermissionsTokenAsync()
         {
             return Task<string>.Factory.StartNew(() => PrismApplicationBase.Current.Properties.ContainsKey("Permissions")
                 ? PrismApplicationBase.Current.Properties["Permissions"].ToString()
                 : "");
         }
 
-        public Task<string> GetUserObject()
+        public Task<string> GetUserObjectAsync()
         {
             return Task<string>.Factory.StartNew(() => PrismApplicationBase.Current.Properties.ContainsKey("MappedUser")
                 ? PrismApplicationBase.Current.Properties["MappedUser"].ToString()
@@ -65,6 +66,12 @@ namespace Mobile.iOS.Helpers
         {
             PrismApplicationBase.Current.Properties["MappedUser"] = json;
             await PrismApplicationBase.Current.SavePropertiesAsync();
+        }
+
+        public void DeleteTokens()
+        {
+            PrismApplicationBase.Current.Properties.Remove(nameof(IdentityToken));
+            PrismApplicationBase.Current.Properties.Remove("RefreshToken");
         }
     }
 }

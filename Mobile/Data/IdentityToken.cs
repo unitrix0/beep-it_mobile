@@ -29,19 +29,21 @@ namespace Mobile.Data
                 Roles = new string[0];
                 IsVaid = false;
             }
+            else
+            {
+                var handler = new JwtSecurityTokenHandler();
+                JwtSecurityToken token = handler.ReadJwtToken(tokenString);
+                IsVaid = token != null;
 
-            var handler = new JwtSecurityTokenHandler();
-            JwtSecurityToken token = handler.ReadJwtToken(tokenString);
-            IsVaid = token != null;
+                int.TryParse(token?.Claims.Single(c => c.Type == JwtRegisteredClaimNames.NameId).Value, out _userId);
+                UserName = token?.Claims.Single(c => c.Type == JwtRegisteredClaimNames.UniqueName).Value;
+                Roles = token?.Claims.Where(c => c.Type == "role")
+                    .Select(c => c.Value).ToArray();
 
-            int.TryParse(token?.Claims.Single(c => c.Type == JwtRegisteredClaimNames.NameId).Value, out _userId);
-            UserName = token?.Claims.Single(c => c.Type == JwtRegisteredClaimNames.UniqueName).Value;
-            Roles = token?.Claims.Where(c => c.Type == "role")
-                .Select(c => c.Value).ToArray();
-
-            long expiryDateUnix = long.Parse(token?.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Exp).Value ?? "0");
-            _expiryDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
-                .AddSeconds(expiryDateUnix);
+                long expiryDateUnix = long.Parse(token?.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Exp).Value ?? "0");
+                _expiryDate = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                    .AddSeconds(expiryDateUnix);
+            }
         }
     }
 }

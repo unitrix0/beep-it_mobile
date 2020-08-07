@@ -3,26 +3,27 @@ using Mobile.DTOs;
 using Mobile.Helpers;
 using System;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 
 namespace Mobile.Data
 {
+    public delegate Task<RefreshTokenResponse> RefreshTokenDelegate();
+
     public class AuthenticationService : IAuthenticationService
     {
+        private const string BaseUrl = "auth/";
         private readonly TokenContainer _tokenContainer;
-        private readonly HttpClient _client = new HttpClient();
-
-        public AuthenticationService(TokenContainer tokenContainer)
+        private readonly HttpClient _client;
+        
+        public AuthenticationService(HttpClient client, TokenContainer tokenContainer)
         {
+            _client = client;
             _tokenContainer = tokenContainer;
-            _client.BaseAddress = new Uri("http://drone02.hive.loc:5000/api/");
         }
 
         public async Task Login(string userName, string password)
         {
-            var response = await _client.PostAsync<LoginResponse>("auth/login", new
+            var response = await _client.PostAsync<LoginResponse>($"{BaseUrl}/login", new
             {
                 userName,
                 password,
@@ -37,15 +38,15 @@ namespace Mobile.Data
             throw new NotImplementedException();
         }
 
-        public async Task RefershTokenAsync()
+        private async Task<RefreshTokenResponse> RefreshTokenAsync()
         {
-            var response = await _client.PostAsync<RefreshTokenResponse>("auth/refreshToken", new
+            var response = await _client.PostAsync<RefreshTokenResponse>($"{BaseUrl}/refreshToken", new
             {
-                token = await _tokenContainer.GetIdentityToken(),
+                token = await _tokenContainer.GetIdentityTokenAsync(),
                 refershToken = await _tokenContainer.GetRefreshToken()
             });
 
-            await _tokenContainer.LoadNewToken(response);
+            return response;
         }
     }
 }

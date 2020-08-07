@@ -15,10 +15,43 @@
     </d:ContentPage.BindingContext>
 
     <ContentPage.Content>
-        <StackLayout>
-        <ListView>
+        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+            <TableView Intent="Form" HasUnevenRows="True">
+                <TableRoot>
+                    <TableSection Title="Allgemein">
+                        <ViewCell>
+                            <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                  Padding="5,0,5,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
-        </ListView>
+                                <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
+                                       Source="{Binding ArticleImage}"/>
+
+                                <Label Text="{Binding ArticleName}" Grid.Column="1" Grid.Row="0"
+                                       FontSize="Medium"/>
+                                <StackLayout Orientation="Horizontal" Grid.Column="1" Grid.Row="1"
+                                             HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" BackgroundColor="Aqua">
+                                    <Label Text="{Binding ContentAmount}"/>
+                                    <Label Text="{Binding Unit}"/>
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal" Grid.Column="1" Grid.Row="2"
+                                             HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" BackgroundColor="Aqua">
+                                    <CheckBox IsChecked="{Binding HasExpireDate}"/>
+                                    <Label Text="Hat Ablaufdatum" VerticalOptions="Center"/>
+                                </StackLayout>
+                            </Grid>
+                        </ViewCell>
+                    </TableSection>
+                </TableRoot>
+            </TableView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

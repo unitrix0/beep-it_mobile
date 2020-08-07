@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:prism="http://prismlibrary.com"
+             xmlns:helpers="clr-namespace:Mobile.Helpers;assembly=Mobile"
+             prism:ViewModelLocator.AutowireViewModel="True"
+             x:Class="Mobile.Views.LoadingPage"
+             BackgroundColor="#648DE5">
+
+    <StackLayout VerticalOptions="Center" HorizontalOptions="Center"
+                 Orientation="Vertical">
+        <Image HorizontalOptions="Center">
+            <Image.Source>
+                <FontImageSource FontFamily="{StaticResource FontAwesomeSolid}"
+                                 Glyph="{x:Static helpers:FontAwesomeIcons.Barcode}"
+                                 Size="99" Color="#FAF9F7"/>
+            </Image.Source>
+        </Image>
+        <Label Text="Beep-It!" FontSize="Title" TextColor="#FAF9F7"
+               HorizontalOptions="Center"/>
+    </StackLayout>
+  
+</ContentPage>

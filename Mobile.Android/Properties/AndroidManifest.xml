@@ -3,5 +3,5 @@
 	<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="29" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<application android:label="Mobile.Android" android:icon="@mipmap/ic_launcher"
-android:fullBackupContent="@xml/auto_backup_rules"></application>
+android:fullBackupContent="@xml/auto_backup_rules" android:networkSecurityConfig="@xml/network_security_config"></application>
 </manifest>

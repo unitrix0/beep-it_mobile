@@ -1,30 +1,35 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using Mobile.Abstractions;
 using Mobile.Data;
 using Mobile.DTOs;
+using Mobile.Views;
 using Newtonsoft.Json;
+using Prism.Navigation;
 
 namespace Mobile.Helpers
 {
     public class TokenContainer
     {
         private readonly ITokenRepo _tokenRepo;
+        private readonly INavigationService _navService;
 
         public User User { get; private set; }
         public PermissionsToken Permissions { get; private set;}
         public IdentityToken IdentityToken { get; private set;}
-
-        public TokenContainer(ITokenRepo tokenRepo)
+        
+        public TokenContainer(ITokenRepo tokenRepo, INavigationService navService)
         {
             _tokenRepo = tokenRepo;
+            _navService = navService;
         }
 
-        public async Task LoadFromRepo()
+        public async Task LoadFromRepoAsync()
         {
-            User = await GetUserObject();
-            Permissions = new PermissionsToken(await GetPermissionsToken());
-            IdentityToken = new IdentityToken(await GetIdentityToken());
+            User = await GetUserObjectAsync();
+            Permissions = new PermissionsToken(await _tokenRepo.GetPermissionsTokenAsync());
+            IdentityToken = new IdentityToken(await GetIdentityTokenAsync());
         }
 
         public async Task LoadLoginResponse(LoginResponse loginResponse)
@@ -48,22 +53,17 @@ namespace Mobile.Helpers
 
         public async Task<string> GetRefreshToken()
         {
-            return await _tokenRepo.GetRefreshToken();
+            return await _tokenRepo.GetRefreshTokenAsync();
         }
 
-        public async Task<string> GetIdentityToken()
+        public async Task<string> GetIdentityTokenAsync()
         {
-            return await _tokenRepo.GetIdentityToken();
+            return await _tokenRepo.GetIdentityTokenAsync();
         }
 
-        private async Task<string> GetPermissionsToken()
+        private async Task<User> GetUserObjectAsync()
         {
-            return await _tokenRepo.GetPermissionsToken();
-        }
-
-        private async Task<User> GetUserObject()
-        {
-            string json = await _tokenRepo.GetUserObject();
+            string json = await _tokenRepo.GetUserObjectAsync();
             return json == null ? new User() : JsonConvert.DeserializeObject<User>(json);
         }
 
@@ -71,6 +71,13 @@ namespace Mobile.Helpers
         {
             string json = JsonConvert.SerializeObject(user);
             await _tokenRepo.SaveUserObject(json);
+        }
+
+        public async Task Logout()
+        {
+            _tokenRepo.DeleteTokens();
+            IdentityToken= new IdentityToken(string.Empty);
+            var r =await _navService.NavigateAbsolutAsync($"{nameof(LoginPage)}");
         }
     }
 }
