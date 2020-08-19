@@ -64,7 +64,15 @@ namespace Mobile.Helpers
         private async Task<User> GetUserObjectAsync()
         {
             string json = await _tokenRepo.GetUserObjectAsync();
-            return json == null ? new User() : JsonConvert.DeserializeObject<User>(json);
+            try
+            {
+                User deserializeObject = json == null ? new User() : JsonConvert.DeserializeObject<User>(json);
+                return deserializeObject;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         private async Task SaveUserObject(User user)

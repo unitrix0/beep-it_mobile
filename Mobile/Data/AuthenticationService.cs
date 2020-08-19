@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace Mobile.Data
 {
-    public delegate Task<RefreshTokenResponse> RefreshTokenDelegate();
-
     public class AuthenticationService : IAuthenticationService
     {
-        private const string BaseUrl = "auth/";
+        private const string BaseUrl = "auth";
         private readonly TokenContainer _tokenContainer;
+        private readonly IArticleService _articleService;
         private readonly HttpClient _client;
         
-        public AuthenticationService(HttpClient client, TokenContainer tokenContainer)
+        public AuthenticationService(HttpClient client, TokenContainer tokenContainer, IArticleService articleService)
         {
             _client = client;
             _tokenContainer = tokenContainer;
+            _articleService = articleService;
         }
 
         public async Task Login(string userName, string password)
@@ -31,22 +31,8 @@ namespace Mobile.Data
             });
 
             await _tokenContainer.LoadLoginResponse(response);
-        }
-
-        public async Task UpdatePermissionsTokenAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        private async Task<RefreshTokenResponse> RefreshTokenAsync()
-        {
-            var response = await _client.PostAsync<RefreshTokenResponse>($"{BaseUrl}/refreshToken", new
-            {
-                token = await _tokenContainer.GetIdentityTokenAsync(),
-                refershToken = await _tokenContainer.GetRefreshToken()
-            });
-
-            return response;
+            await _articleService.GetBaseData();
+            Console.WriteLine($"------------------ New Token Expires {_tokenContainer.IdentityToken.ExpireDate.ToLongTimeString()}");
         }
     }
 }

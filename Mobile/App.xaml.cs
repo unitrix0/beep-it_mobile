@@ -6,8 +6,10 @@ using Mobile.Views;
 using Prism;
 using Prism.Ioc;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
 using DryIoc;
 using Mobile.DTOs;
 using Prism.DryIoc;
@@ -44,14 +46,11 @@ namespace Mobile
             container.RegisterSingleton<TokenContainer>();
             container.RegisterSingleton<HttpMessageHandler, BearerTokenHandler>();
             container.RegisterSingleton<ErrorResponseHandler>();
-            container.GetContainer().RegisterDelegate<HttpClient>(serviceProvider =>
-                new HttpClient(serviceProvider.Resolve<BearerTokenHandler>())
-                {
-                    BaseAddress = new Uri("http://drone02.hive.loc:5000/api/")
-                });
+            container.GetContainer().RegisterDelegate(HttpClientFactory);
+            container.GetContainer().RegisterDelegate(AutomMapperFactory);
 
             container.RegisterSingleton<IAuthenticationService, AuthenticationService>();
-            container.Register<IArticleService, ArticleService>();
+            container.RegisterSingleton<IArticleService, ArticleService>();
 
             container.RegisterForNavigation<MainPage>();
             container.RegisterForNavigation<NavigationPage>();
@@ -63,6 +62,25 @@ namespace Mobile
 
             container.RegisterForNavigation<ArticleBasePage, ArticleBasePageViewModel>();
             container.RegisterForNavigation<LoadingPage, LoadingPageViewModel>();
+        }
+
+        private static IMapper AutomMapperFactory(IResolverContext resolver)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Article, ArticleBasePageViewModel>();
+            });
+
+            return config.CreateMapper();
+        }
+
+        private static HttpClient HttpClientFactory(IResolverContext resolver)
+        {
+            return new HttpClient(resolver.Resolve<BearerTokenHandler>())
+            {
+                //TODO API Url
+                BaseAddress = new Uri("http://drone02.hive.loc:5000/api/")
+            };
         }
     }
 }

@@ -47,6 +47,7 @@ namespace Mobile
                 RefreshTokenResponse response = await _refreshTask;
                 _refreshingToken = false;
 
+                await _tokenContainer.LoadNewToken(response);
                 request.Headers.UpdateBearerToken(response.IdentityToken);
                 return await base.SendAsync(request, cancellationToken);
             }
@@ -62,13 +63,17 @@ namespace Mobile
         private async Task<RefreshTokenResponse> GetNewTokenAsync(CancellationToken cancellationToken)
         {
             //TODO URI
+            string identityToken = await _tokenContainer.GetIdentityTokenAsync();
+            string refreshToken = await _tokenContainer.GetRefreshToken();
+            string json = JsonConvert.SerializeObject(new
+            {
+                identityToken,
+                refreshToken
+            });
+
             var req = new HttpRequestMessage(HttpMethod.Post, "http://drone02.hive.loc:5000/api/auth/refreshToken")
             {
-                Content = new StringContent(JsonConvert.SerializeObject(new
-                {
-                    identityToken = await _tokenContainer.GetIdentityTokenAsync(),
-                    refreshToken = await _tokenContainer.GetRefreshToken()
-                }), Encoding.UTF8, "application/json")
+                Content = new StringContent(json, Encoding.UTF8, "application/json")
             };
 
             HttpResponseMessage response = await base.SendAsync(req, cancellationToken);

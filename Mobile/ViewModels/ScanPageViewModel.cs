@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Windows.Input;
+using Mobile.Abstractions;
 using Mobile.Data;
 using Mobile.Helpers;
 using Mobile.Views;
@@ -14,6 +15,7 @@ namespace Mobile.ViewModels
 {
     public class ScanPageViewModel : TabPageBaseViewModel
     {
+        private readonly IArticleService _articles;
         private ScanModeEnum _runningScanMode;
         private bool _scannerVisible;
         private bool _scannerIsAnalyzing;
@@ -53,8 +55,9 @@ namespace Mobile.ViewModels
 
         public ScanPageViewModel() { }
 
-        public ScanPageViewModel(INavigationService navService) : base(navService)
+        public ScanPageViewModel(INavigationService navService, IArticleService articles) : base(navService)
         {
+            _articles = articles;
             OnBarcodeDetected = new Command<Result>(BarcodeDetected);
             OnStartScan = new Command<ScanModeEnum>(StartScan, scanMode => RunningScanMode == scanMode ||
                                                                            RunningScanMode == ScanModeEnum.None);
@@ -86,20 +89,21 @@ namespace Mobile.ViewModels
         {
             Device.BeginInvokeOnMainThread(async () =>
             {
+                if(RunningScanMode == ScanModeEnum.None) return;
+
+                RunningScanMode = ScanModeEnum.None;
                 ScannerVisible = false;
                 ScannerIsAnalyzing = false;
                 IsScanning = false;
-                RunningScanMode = ScanModeEnum.None;
                 //Barcode = $"({result.BarcodeFormat}) {result.Text}";
-
+                IsBusy = true;
                 if (result != null)
                 {
-                    INavigationResult r = await NavigationService.NavigateAsync(nameof(ArticleBasePage),
-                        new NavigationParameters {{"barcode", result.Text}});
+                    Console.WriteLine("------------------------------- Barcode found -------------------------------\n");
+                    INavigationResult r = await NavigationService.NavigateAsync($"{nameof(ArticleBasePage)}",
+                        new NavigationParameters { { "barcode", result.Text } });
                 }
             });
-           
-
         }
     }
 }

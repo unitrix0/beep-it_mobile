@@ -18,8 +18,9 @@ namespace Mobile.Data
         public int UserId => _userId;
         public string UserName { get; }
         public string[] Roles { get; }
-        public bool IsExpired => IsVaid && _expiryDate < DateTime.UtcNow;
-        public bool IsVaid { get; private set; }
+        public bool IsExpired => IsValid && _expiryDate < DateTime.UtcNow;
+        public DateTime ExpireDate => _expiryDate;
+        public bool IsValid { get; private set; }
 
         public IdentityToken(string tokenString)
         {
@@ -27,13 +28,13 @@ namespace Mobile.Data
             {
                 UserName = "";
                 Roles = new string[0];
-                IsVaid = false;
+                IsValid = false;
             }
             else
             {
                 var handler = new JwtSecurityTokenHandler();
                 JwtSecurityToken token = handler.ReadJwtToken(tokenString);
-                IsVaid = token != null;
+                IsValid = token != null;
 
                 int.TryParse(token?.Claims.Single(c => c.Type == JwtRegisteredClaimNames.NameId).Value, out _userId);
                 UserName = token?.Claims.Single(c => c.Type == JwtRegisteredClaimNames.UniqueName).Value;

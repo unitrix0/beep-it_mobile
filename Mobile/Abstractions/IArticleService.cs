@@ -6,5 +6,7 @@ namespace Mobile.Abstractions
     public interface IArticleService
     {
         Task<Article> GetArticle(string barcode);
+        Task GetBaseData();
+        ArticlesBaseData BaseData { get; }
     }
 }

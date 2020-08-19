@@ -17,19 +17,31 @@ namespace Mobile.ViewModels
     {
         private readonly INavigationService _navService;
         private readonly TokenContainer _tokenContainer;
+        private readonly IArticleService _articleService;
 
-        public LoadingPageViewModel(INavigationService navService, TokenContainer tokenContainer)
+        public LoadingPageViewModel(INavigationService navService, TokenContainer tokenContainer, IArticleService articleService)
         {
             _navService = navService;
             _tokenContainer = tokenContainer;
+            _articleService = articleService;
         }
 
         public async void OnAppearing()
         {
             await _tokenContainer.LoadFromRepoAsync();
 
-            string startPage = _tokenContainer.IdentityToken.IsVaid ? nameof(MainPage) : nameof(LoginPage);
-            await _navService.NavigateAbsolutAsync($"/{startPage}").ConfigureAwait(false);
+            string startPage;
+            if (_tokenContainer.IdentityToken.IsValid)
+            {
+                startPage = $"/{nameof(NavigationPage)}/{nameof(MainPage)}";
+                await _articleService.GetBaseData();
+            }
+            else
+            {
+                startPage = $"/{nameof(LoginPage)}";
+            }
+
+            await _navService.NavigateAsync(startPage).ConfigureAwait(false);
         }
 
         public void OnDisappearing()

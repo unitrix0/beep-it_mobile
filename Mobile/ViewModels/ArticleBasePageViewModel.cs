@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
+using AutoMapper;
 using Mobile.Abstractions;
 using Mobile.DTOs;
 using Prism.Navigation;
@@ -8,22 +10,23 @@ namespace Mobile.ViewModels
     public class ArticleBasePageViewModel : ViewModelBase
     {
         private readonly IArticleService _articles;
-        private string _articleName;
-        private bool _hasExpireDate;
+        private readonly IMapper _mapper;
+        private string _name;
+        private bool _hasLifetime;
         private int _contentAmount;
         private string _unit;
-        private string _articleImage;
+        private string _imageUrl;
 
-        public string ArticleName
+        public string Name
         {
-            get => _articleName;
-            set => SetProperty(ref _articleName, value);
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
 
-        public bool HasExpireDate
+        public bool HasLifetime
         {
-            get => _hasExpireDate;
-            set => SetProperty(ref _hasExpireDate, value);
+            get => _hasLifetime;
+            set => SetProperty(ref _hasLifetime, value);
         }
 
         public int ContentAmount
@@ -38,17 +41,18 @@ namespace Mobile.ViewModels
             set => SetProperty(ref _unit, value);
         }
 
-        public string ArticleImage
+        public string ImageUrl
         {
-            get => _articleImage;
-            set => SetProperty(ref _articleImage, value);
+            get => _imageUrl;
+            set => SetProperty(ref _imageUrl, value);
         }
 
         public ArticleBasePageViewModel() { }
 
-        public ArticleBasePageViewModel(IArticleService articles)
+        public ArticleBasePageViewModel(IArticleService articles, IMapper mapper)
         {
             _articles = articles;
+            _mapper = mapper;
         }
 
         //protected ArticleBasePageViewModel()
@@ -66,8 +70,14 @@ namespace Mobile.ViewModels
         {
             if (parameters["barcode"] is string barcode)
             {
+                IsBusy = true;
                 Article article = await _articles.GetArticle(barcode);
+                _mapper.Map(article, this);
+                Unit = _articles.BaseData.Units.Single(u => u.Id == article.UnitId).Abbreviation;
+                IsBusy = false;
             }
         }
+
+
     }
 }

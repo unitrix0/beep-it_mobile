@@ -23,7 +23,8 @@ namespace Mobile
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            request.Headers.UpdateBearerToken(await _tokenContainer.GetIdentityTokenAsync());
+            string identityToken = await _tokenContainer.GetIdentityTokenAsync();
+            request.Headers.UpdateBearerToken(identityToken);
             return await base.SendAsync(request, cancellationToken);
         }
     }

@@ -8,7 +8,8 @@
              mc:Ignorable="d"
              x:Class="Mobile.Views.ArticleBasePage"
              prism:ViewModelLocator.AutowireViewModel="True"
-             Title="{Binding Title}">
+             Title="{Binding Title}"
+             IsBusy="{Binding IsBusy}">
 
     <d:ContentPage.BindingContext>
         <viewModels:ArticleBasePageViewModel/>
@@ -32,19 +33,19 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="3"
-                                       Source="{Binding ArticleImage}"/>
+                                <Image Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Aspect="AspectFit" WidthRequest="50"
+                                       Source="{Binding ImageUrl}" Margin="7"/>
 
-                                <Label Text="{Binding ArticleName}" Grid.Column="1" Grid.Row="0"
+                                <Label Text="{Binding Name}" Grid.Column="1" Grid.Row="0"
                                        FontSize="Medium"/>
                                 <StackLayout Orientation="Horizontal" Grid.Column="1" Grid.Row="1"
-                                             HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" BackgroundColor="Aqua">
-                                    <Label Text="{Binding ContentAmount}"/>
+                                             HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+                                    <Label Text="{Binding ContentAmount, StringFormat='Packungsinhalt {0}'}"/>
                                     <Label Text="{Binding Unit}"/>
                                 </StackLayout>
                                 <StackLayout Orientation="Horizontal" Grid.Column="1" Grid.Row="2"
-                                             HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" BackgroundColor="Aqua">
-                                    <CheckBox IsChecked="{Binding HasExpireDate}"/>
+                                             HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+                                    <CheckBox IsChecked="{Binding HasLifetime}"/>
                                     <Label Text="Hat Ablaufdatum" VerticalOptions="Center"/>
                                 </StackLayout>
                             </Grid>
