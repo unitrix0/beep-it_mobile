@@ -13,7 +13,6 @@ namespace Mobile
     public class ErrorResponseHandler : DelegatingHandler
     {
         private readonly TokenContainer _tokenContainer;
-        private bool _refreshingToken;
         private Task<RefreshTokenResponse> _refreshTask;
 
         public ErrorResponseHandler(TokenContainer tokenContainer)
@@ -39,13 +38,11 @@ namespace Mobile
 
         private async Task<HttpResponseMessage> RefreshIdentityToken(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            if (!_refreshingToken)
+            if (_refreshTask == null)
             {
                 Console.WriteLine("************** Refreshing token");
-                _refreshingToken = true;
                 _refreshTask = GetNewTokenAsync(cancellationToken);
                 RefreshTokenResponse response = await _refreshTask;
-                _refreshingToken = false;
 
                 await _tokenContainer.LoadNewToken(response);
                 request.Headers.UpdateBearerToken(response.IdentityToken);
